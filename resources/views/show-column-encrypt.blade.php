@@ -6,7 +6,7 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3>Choose column for <span class="text-primary">Decrypt</span></h3>
+                    <h3>Choose column for <span class="text-primary">Encrypt</span></h3>
                 </div>
 
                 <div class="panel-body">

@@ -55,13 +55,9 @@ class HomeController extends Controller
     {
         $columns = DB::select('show columns from ' . $table_name);
         $arr_type = [
-            'char',
-            'varchar',
-            'tinytext',
             'text',
             'mediumtext',
-            'longtext',
-            'json',
+            'longtext'
         ];
 
         $arr_column_except = [
@@ -154,18 +150,14 @@ class HomeController extends Controller
         return redirect()->route('home');
     }
 
-    public function uploadCSV(Request $request)
+    /*public function uploadCSV(Request $request)
     {
-        if ($request->hasFile('file-uss-upload')) {
-            $file = $request->file('file-uss-upload');
+        if ($request->hasFile('csv-file')) {
+            $file = $request->file('csv-file');
 
             $file_path = $file->getRealPath();
             $openFile = fopen($file_path, 'r');
-            $length = BaseUtil::LENGTH_FIELD_CSV;
-            $delimeter = BaseUtil::DELIMITER;
-            $enclosure = BaseUtil::ENCLOSURE;
-            $header = fgetcsv($openFile, $length, $delimeter, $enclosure);
-
+            $delimiter = $this->detectDelimeter($openFile);
         }
     }
 
@@ -173,16 +165,16 @@ class HomeController extends Controller
     {
         $data_1 = null;
         $data_2 = null;
-        $delimiter = self::$delim_list['comma'];
-        foreach(self::$delim_list as $key=>$value)
+        $delimiter = self::ARR_DELIMETER['tab'];
+        foreach(self::ARR_DELIMETER as $key=>$value)
         {
-            $data_1 = fgetcsv($open_csv, 4096, $value);
+            $data_1 = fgetcsv($open_csv, 100000, $value);
             $delimiter = sizeof($data_1) > sizeof($data_2) ? $key : $delimiter;
             $data_2 = $data_1;
         }
 
         return $delimiter;
-    }
+    }*/
 
     public function encryptData($raw_data, $secretyKey)
     {
