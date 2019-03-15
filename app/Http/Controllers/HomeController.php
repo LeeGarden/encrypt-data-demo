@@ -2,12 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Utils\CryptoLibCustom;
 use DB;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     protected $cipher_method = 'BF-ECB';
+
+    protected $arr_type = [
+        'text',
+        'mediumtext',
+        'longtext'
+    ];
+    protected $arr_column_except = [
+        'password',
+        'remember_token'
+    ];
+    protected $arr_table_not_show = [
+        'failed_jobs',
+        'jobs',
+        'migrations'
+    ];
 
     const ARR_DELIMETER = [
         'tab'       => "\t",
@@ -32,11 +48,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $arr_table_not_show = [
-            'failed_jobs',
-            'jobs',
-            'migrations'
-        ];
+        $arr_table_not_show = $this->arr_table_not_show;
         $tables = DB::select('SHOW TABLES');
         $db_name = DB::getDatabaseName();
 
@@ -54,16 +66,9 @@ class HomeController extends Controller
     public function showColumnEncrypt($table_name)
     {
         $columns = DB::select('show columns from ' . $table_name);
-        $arr_type = [
-            'text',
-            'mediumtext',
-            'longtext'
-        ];
+        $arr_type = $this->arr_type;
 
-        $arr_column_except = [
-            'password',
-            'remember_token'
-        ];
+        $arr_column_except = $this->arr_column_except;
         $list_column = [];
         foreach ($columns as $column){
             $type = preg_replace('(\(.*)', '', $column->Type);
@@ -77,20 +82,9 @@ class HomeController extends Controller
     public function showColumnDecrypt($table_name)
     {
         $columns = DB::select('show columns from ' . $table_name);
-        $arr_type = [
-            'char',
-            'varchar',
-            'tinytext',
-            'text',
-            'mediumtext',
-            'longtext',
-            'json',
-        ];
+        $arr_type = $this->arr_type;
 
-        $arr_column_except = [
-            'password',
-            'remember_token'
-        ];
+        $arr_column_except = $this->arr_column_except;
         $list_column = [];
         foreach ($columns as $column){
             $type = preg_replace('(\(.*)', '', $column->Type);
@@ -178,14 +172,14 @@ class HomeController extends Controller
 
     public function encryptData($raw_data, $secretyKey)
     {
-        $encryption = new \MrShan0\CryptoLib\CryptoLib();
+        $encryption = new CryptoLibCustom();
 
         return $encryption->encryptPlainTextWithRandomIV($raw_data, $secretyKey);
     }
 
     public function decryptData($encypted_data, $secretyKey)
     {
-        $encryption = new \MrShan0\CryptoLib\CryptoLib();
+        $encryption = new CryptoLibCustom();
 
         return $encryption->decryptCipherTextWithRandomIV($encypted_data, $secretyKey);
     }
